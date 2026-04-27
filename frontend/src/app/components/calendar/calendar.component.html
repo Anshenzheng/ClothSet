@@ -1,0 +1,85 @@
+<div class="calendar-container">
+  <div class="page-header">
+    <h1>穿搭日历</h1>
+    <p class="subtitle">记录您每天的穿搭</p>
+  </div>
+
+  <div class="calendar-wrapper card">
+    <div class="calendar-header flex justify-between items-center">
+      <button class="nav-btn" (click)="prevMonth()">←</button>
+      <h2>{{ currentYear }}年 {{ currentMonthName }}</h2>
+      <button class="nav-btn" (click)="nextMonth()">→</button>
+    </div>
+
+    <div class="calendar-weekdays">
+      <div *ngFor="let day of weekDays" class="weekday">{{ day }}</div>
+    </div>
+
+    <div class="calendar-grid">
+      <div 
+        *ngFor="let day of calendarDays" 
+        class="calendar-day"
+        [class.other-month]="!day.currentMonth"
+        [class.today]="day.isToday"
+        [class.has-entry]="day.hasEntry"
+        [class.past]="day.isPast && day.currentMonth"
+        [class.selected]="selectedDay?.date === day.date && selectedDay?.currentMonth === day.currentMonth"
+        (click)="selectDay(day)"
+      >
+        <span class="day-number">{{ day.date }}</span>
+        <span *ngIf="day.hasEntry && day.currentMonth" class="entry-indicator">●</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showEntryForm" (click)="closeForm()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header flex justify-between items-center">
+        <h2>{{ currentMonthName }} {{ selectedDay?.date }}日</h2>
+        <button class="close-btn" (click)="closeForm()">✕</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="form-group">
+          <label>选择穿搭方案</label>
+          <select class="form-control" [(ngModel)]="entryForm.outfitId">
+            <option [ngValue]="null">无</option>
+            <option *ngFor="let outfit of outfits" [ngValue]="outfit.id">
+              {{ outfit.name || '穿搭方案 #' + outfit.id }}
+            </option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>天气</label>
+          <select class="form-control" [(ngModel)]="entryForm.weather">
+            <option value="">无</option>
+            <option value="晴天">☀️ 晴天</option>
+            <option value="多云">⛅ 多云</option>
+            <option value="阴天">☁️ 阴天</option>
+            <option value="雨天">🌧️ 雨天</option>
+            <option value="雪天">❄️ 雪天</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>备注</label>
+          <textarea 
+            class="form-control" 
+            rows="3" 
+            [(ngModel)]="entryForm.note"
+            placeholder="记录今天的穿搭心得..."
+          ></textarea>
+        </div>
+        
+        <div class="form-actions flex justify-end gap-2">
+          <button *ngIf="selectedDay?.entry" class="btn btn-danger" (click)="deleteEntry()">
+            删除
+          </button>
+          <button class="btn btn-secondary" (click)="closeForm()">取消</button>
+          <button class="btn btn-primary" (click)="saveEntry()">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

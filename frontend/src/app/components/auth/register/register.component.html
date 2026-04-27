@@ -1,0 +1,85 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <span class="auth-logo">👗</span>
+      <h1>创建账号</h1>
+      <p class="auth-subtitle">开始管理您的衣橱</p>
+    </div>
+    
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-group">
+        <label for="username">用户名</label>
+        <input
+          type="text"
+          id="username"
+          formControlName="username"
+          class="form-control"
+          placeholder="3-50个字符"
+        >
+        <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched" class="error-message">
+          <span *ngIf="registerForm.get('username')?.errors?.['required']">请输入用户名</span>
+          <span *ngIf="registerForm.get('username')?.errors?.['minlength']">用户名至少3个字符</span>
+          <span *ngIf="registerForm.get('username')?.errors?.['maxlength']">用户名最多50个字符</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">邮箱</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+          placeholder="your@email.com"
+        >
+        <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="error-message">
+          <span *ngIf="registerForm.get('email')?.errors?.['required']">请输入邮箱</span>
+          <span *ngIf="registerForm.get('email')?.errors?.['email']">请输入有效的邮箱地址</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">密码</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          placeholder="至少6个字符"
+        >
+        <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="error-message">
+          <span *ngIf="registerForm.get('password')?.errors?.['required']">请输入密码</span>
+          <span *ngIf="registerForm.get('password')?.errors?.['minlength']">密码至少6个字符</span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="confirmPassword">确认密码</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          class="form-control"
+          placeholder="再次输入密码"
+        >
+        <div *ngIf="(registerForm.get('confirmPassword')?.invalid || registerForm.errors?.['passwordMismatch']) && registerForm.get('confirmPassword')?.touched" class="error-message">
+          <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">请确认密码</span>
+          <span *ngIf="registerForm.errors?.['passwordMismatch']">两次密码不一致</span>
+        </div>
+      </div>
+      
+      <div *ngIf="errorMessage" class="error-alert">
+        {{ errorMessage }}
+      </div>
+      
+      <button type="submit" class="btn btn-primary btn-full" [disabled]="isLoading">
+        <span *ngIf="!isLoading">注册</span>
+        <span *ngIf="isLoading">注册中...</span>
+      </button>
+    </form>
+    
+    <div class="auth-footer">
+      <p>已有账号？<a routerLink="/login" class="link-primary">立即登录</a></p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,108 @@
+<div class="wardrobe-container">
+  <div class="page-header flex justify-between items-center">
+    <div>
+      <h1>我的衣橱</h1>
+      <p class="subtitle">共 {{ clothes.length }} 件衣物</p>
+    </div>
+    <button class="btn btn-primary" (click)="openAddForm()">
+      ➕ 添加衣物
+    </button>
+  </div>
+
+  <div class="filter-section card">
+    <div class="filter-group">
+      <label>按分类筛选：</label>
+      <div class="filter-buttons">
+        <button 
+          class="filter-btn" 
+          [class.active]="selectedCategory === null"
+          (click)="filterByCategory(null)"
+        >
+          全部
+        </button>
+        <button 
+          *ngFor="let cat of categories" 
+          class="filter-btn"
+          [class.active]="selectedCategory === cat.id"
+          (click)="filterByCategory(cat.id)"
+        >
+          {{ cat.name }}
+        </button>
+      </div>
+    </div>
+    
+    <div class="filter-group">
+      <label>按季节筛选：</label>
+      <div class="filter-buttons">
+        <button 
+          class="filter-btn" 
+          [class.active]="selectedSeason === null"
+          (click)="filterBySeason(null)"
+        >
+          全部
+        </button>
+        <button 
+          *ngFor="let season of seasons" 
+          class="filter-btn"
+          [class.active]="selectedSeason === season.id"
+          (click)="filterBySeason(season.id)"
+        >
+          {{ season.name }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wardrobe-grid" *ngIf="!isLoading">
+    <div *ngIf="clothes.length === 0" class="empty-state">
+      <span class="empty-icon">👕</span>
+      <h3>衣橱空空如也</h3>
+      <p>点击上方按钮添加您的第一件衣物</p>
+      <button class="btn btn-primary" (click)="openAddForm()">
+        添加衣物
+      </button>
+    </div>
+
+    <div class="cloth-card card" *ngFor="let cloth of clothes">
+      <div class="cloth-image">
+        <img [src]="getImageUrl(cloth.imageUrl)" [alt]="cloth.name">
+        <div class="cloth-overlay">
+          <button class="overlay-btn" (click)="openEditForm(cloth)">编辑</button>
+          <button class="overlay-btn danger" (click)="deleteCloth(cloth.id)">删除</button>
+        </div>
+      </div>
+      <div class="cloth-info">
+        <h3>{{ cloth.name }}</h3>
+        <div class="cloth-meta">
+          <span class="meta-tag" *ngIf="cloth.categoryName">{{ cloth.categoryName }}</span>
+          <span class="meta-tag" *ngIf="cloth.color">{{ cloth.color }}</span>
+          <span class="meta-tag" *ngIf="cloth.brand">{{ cloth.brand }}</span>
+        </div>
+        <div class="cloth-stats">
+          <span>穿了 {{ cloth.wearCount || 0 }} 次</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading-state" *ngIf="isLoading">
+    <span class="loading-spinner"></span>
+    <p>加载中...</p>
+  </div>
+
+  <div class="modal-overlay" *ngIf="showForm" (click)="closeForm()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header flex justify-between items-center">
+        <h2>{{ editingCloth ? '编辑衣物' : '添加衣物' }}</h2>
+        <button class="close-btn" (click)="closeForm()">✕</button>
+      </div>
+      <div class="modal-body">
+        <app-cloth-form 
+          [cloth]="editingCloth"
+          (submitted)="onFormSubmitted()"
+          (cancelled)="closeForm()"
+        ></app-cloth-form>
+      </div>
+    </div>
+  </div>
+</div>

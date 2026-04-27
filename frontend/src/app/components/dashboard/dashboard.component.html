@@ -1,0 +1,108 @@
+<div class="dashboard-container">
+  <div class="page-header">
+    <h1>欢迎回来！</h1>
+    <p class="subtitle">这是您的衣橱概览</p>
+  </div>
+
+  <div class="stats-grid grid grid-4">
+    <div class="stat-card card">
+      <div class="stat-icon clothes">👕</div>
+      <div class="stat-info">
+        <h3>{{ totalClothes }}</h3>
+        <p>衣物总数</p>
+      </div>
+    </div>
+    
+    <div class="stat-card card">
+      <div class="stat-icon outfits">✨</div>
+      <div class="stat-info">
+        <h3>{{ totalOutfits }}</h3>
+        <p>穿搭方案</p>
+      </div>
+    </div>
+    
+    <div class="stat-card card">
+      <div class="stat-icon calendar">📅</div>
+      <div class="stat-info">
+        <h3>{{ currentMonth }}月</h3>
+        <p>穿搭日历</p>
+      </div>
+    </div>
+    
+    <div class="stat-card card">
+      <div class="stat-icon stats">📊</div>
+      <div class="stat-info">
+        <h3>{{ categoryStats.length }}</h3>
+        <p>分类统计</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-grid grid grid-2">
+    <div class="section-card card">
+      <div class="section-header">
+        <h2>最近添加</h2>
+        <a routerLink="/wardrobe" class="view-all">查看全部 →</a>
+      </div>
+      <div class="recent-clothes grid grid-3" *ngIf="recentClothes.length > 0">
+        <div class="cloth-item" *ngFor="let cloth of recentClothes">
+          <div class="cloth-image">
+            <img [src]="getImageUrl(cloth.imageUrl)" [alt]="cloth.name">
+          </div>
+          <div class="cloth-info">
+            <h4>{{ cloth.name }}</h4>
+            <span class="category">{{ cloth.categoryName || '未分类' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="empty-state" *ngIf="recentClothes.length === 0">
+        <span class="empty-icon">👕</span>
+        <p>还没有添加衣物</p>
+        <a routerLink="/wardrobe" class="btn btn-primary">添加第一件</a>
+      </div>
+    </div>
+
+    <div class="section-card card">
+      <div class="section-header">
+        <h2>分类统计</h2>
+      </div>
+      <div class="category-stats" *ngIf="categoryStats.length > 0">
+        <div class="category-item" *ngFor="let cat of categoryStats">
+          <div class="category-info">
+            <span class="category-name">{{ cat.categoryName }}</span>
+            <span class="category-count">{{ cat.count }} 件</span>
+          </div>
+          <div class="category-bar">
+            <div class="category-fill" [style.width]="getPercentage(cat.count, totalClothes)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="empty-state" *ngIf="categoryStats.length === 0">
+        <span class="empty-icon">📊</span>
+        <p>暂无统计数据</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="quick-actions card">
+    <h2>快捷操作</h2>
+    <div class="actions-grid grid grid-4">
+      <a routerLink="/wardrobe" class="action-item">
+        <span class="action-icon">➕</span>
+        <span>添加衣物</span>
+      </a>
+      <a routerLink="/outfit" class="action-item">
+        <span class="action-icon">🎲</span>
+        <span>随机穿搭</span>
+      </a>
+      <a routerLink="/calendar" class="action-item">
+        <span class="action-icon">📅</span>
+        <span>记录穿搭</span>
+      </a>
+      <a routerLink="/statistics" class="action-item">
+        <span class="action-icon">📈</span>
+        <span>查看统计</span>
+      </a>
+    </div>
+  </div>
+</div>

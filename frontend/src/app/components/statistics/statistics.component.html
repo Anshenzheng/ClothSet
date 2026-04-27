@@ -1,0 +1,88 @@
+<div class="statistics-container">
+  <div class="page-header">
+    <h1>统计分析</h1>
+    <p class="subtitle">查看您的衣橱数据统计</p>
+  </div>
+
+  <div class="overview-grid grid grid-3">
+    <div class="stat-card card">
+      <div class="stat-icon total">👕</div>
+      <div class="stat-info">
+        <h3>{{ getTotalClothes() }}</h3>
+        <p>衣物总数</p>
+      </div>
+    </div>
+    
+    <div class="stat-card card">
+      <div class="stat-icon categories">📁</div>
+      <div class="stat-info">
+        <h3>{{ categoryStats.length }}</h3>
+        <p>分类数量</p>
+      </div>
+    </div>
+    
+    <div class="stat-card card">
+      <div class="stat-icon colors">🎨</div>
+      <div class="stat-info">
+        <h3>{{ colorStats.length }}</h3>
+        <p>颜色种类</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-grid grid grid-2">
+    <div class="chart-card card">
+      <div class="chart-header">
+        <h3>分类统计</h3>
+      </div>
+      <div class="chart-container">
+        <canvas baseChart 
+          [data]="categoryChartData"
+          [options]="categoryChartOptions"
+          [type]="'pie'">
+        </canvas>
+      </div>
+      <div class="chart-list">
+        <div class="list-item" *ngFor="let cat of categoryStats">
+          <span class="item-name">{{ cat.categoryName }}</span>
+          <span class="item-count">{{ cat.count }} 件 ({{ getPercentage(cat.count, getTotalClothes()) }})</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card card">
+      <div class="chart-header">
+        <h3>颜色统计</h3>
+      </div>
+      <div class="chart-container" *ngIf="colorStats.length > 0">
+        <canvas baseChart 
+          [data]="colorChartData"
+          [options]="colorChartOptions"
+          [type]="'doughnut'">
+        </canvas>
+      </div>
+      <div class="empty-chart" *ngIf="colorStats.length === 0">
+        <span class="empty-icon">🎨</span>
+        <p>暂无颜色数据</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card card">
+    <div class="chart-header flex justify-between items-center">
+      <h3>月度趋势</h3>
+      <div class="year-nav flex items-center gap-2">
+        <button class="nav-btn" (click)="prevYear()">←</button>
+        <span class="year-label">{{ currentYear }}年</span>
+        <button class="nav-btn" (click)="nextYear()">→</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas baseChart 
+        [data]="monthlyChartData"
+        [options]="monthlyChartOptions"
+        [type]="'bar'">
+      </canvas>
+    </div>
+  </div>
+</div>

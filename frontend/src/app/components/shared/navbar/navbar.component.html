@@ -1,0 +1,36 @@
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="nav-brand" routerLink="/dashboard">
+      <span class="logo">👗</span>
+      <span class="brand-name">ClothSet</span>
+    </div>
+    
+    <button class="menu-toggle" (click)="toggleMenu()">
+      <span *ngIf="!isMenuOpen">☰</span>
+      <span *ngIf="isMenuOpen">✕</span>
+    </button>
+    
+    <div class="nav-links" [class.active]="isMenuOpen">
+      <a routerLink="/dashboard" routerLinkActive="active" (click)="isMenuOpen = false">
+        <span class="nav-icon">📊</span> 概览
+      </a>
+      <a routerLink="/wardrobe" routerLinkActive="active" (click)="isMenuOpen = false">
+        <span class="nav-icon">👕</span> 衣橱
+      </a>
+      <a routerLink="/outfit" routerLinkActive="active" (click)="isMenuOpen = false">
+        <span class="nav-icon">✨</span> 穿搭推荐
+      </a>
+      <a routerLink="/calendar" routerLinkActive="active" (click)="isMenuOpen = false">
+        <span class="nav-icon">📅</span> 穿搭日历
+      </a>
+      <a routerLink="/statistics" routerLinkActive="active" (click)="isMenuOpen = false">
+        <span class="nav-icon">📈</span> 统计分析
+      </a>
+      
+      <div class="nav-user">
+        <span class="user-name">{{ getUsername() }}</span>
+        <button class="btn-logout" (click)="logout()">退出</button>
+      </div>
+    </div>
+  </div>
+</nav>

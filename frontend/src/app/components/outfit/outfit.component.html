@@ -1,0 +1,133 @@
+<div class="outfit-container">
+  <div class="page-header">
+    <h1>穿搭推荐</h1>
+    <p class="subtitle">一键生成适合您的穿搭方案</p>
+  </div>
+
+  <div class="tab-nav">
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'random'"
+      (click)="setTab('random')"
+    >
+      🎲 随机推荐
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'saved'"
+      (click)="setTab('saved')"
+    >
+      💾 已保存 ({{ savedOutfits.length }})
+    </button>
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'favorites'"
+      (click)="setTab('favorites')"
+    >
+      ❤️ 收藏 ({{ favoriteOutfits.length }})
+    </button>
+  </div>
+
+  <div class="tab-content">
+    <div *ngIf="activeTab === 'random'" class="random-section card">
+      <div class="random-header">
+        <h2>随机穿搭推荐</h2>
+        <button class="btn btn-primary" (click)="generateRandomOutfit()" [disabled]="isGenerating">
+          <span *ngIf="!isGenerating">🎲 一键生成</span>
+          <span *ngIf="isGenerating">生成中...</span>
+        </button>
+      </div>
+
+      <div *ngIf="!randomOutfit && !isGenerating" class="empty-state">
+        <span class="empty-icon">✨</span>
+        <h3>点击上方按钮生成穿搭方案</h3>
+        <p>系统将从您的衣橱中随机选择衣物搭配</p>
+      </div>
+
+      <div *ngIf="isGenerating" class="loading-state">
+        <span class="loading-spinner"></span>
+        <p>正在为您搭配...</p>
+      </div>
+
+      <div *ngIf="randomOutfit" class="outfit-preview">
+        <h3>{{ randomOutfit.name }}</h3>
+        <div class="outfit-items grid grid-4">
+          <div class="outfit-item card" *ngFor="let clothId of randomOutfit.clothIds">
+            <div class="item-image">
+              <img [src]="getImageUrl('')" alt="衣物">
+            </div>
+            <div class="item-info">
+              <p>衣物 #{{ clothId }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="outfit-actions">
+          <button class="btn btn-primary" (click)="saveCurrentOutfit()">
+            💾 保存此穿搭
+          </button>
+          <button class="btn btn-secondary" (click)="generateRandomOutfit()">
+            🔄 换一个
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'saved'" class="saved-section">
+      <div *ngIf="savedOutfits.length === 0" class="empty-state card">
+        <span class="empty-icon">💾</span>
+        <h3>还没有保存的穿搭</h3>
+        <p>去随机推荐页面试试看</p>
+        <button class="btn btn-primary" (click)="setTab('random')">
+          去生成
+        </button>
+      </div>
+
+      <div *ngIf="savedOutfits.length > 0" class="outfit-grid">
+        <div class="outfit-card card" *ngFor="let outfit of savedOutfits">
+          <div class="outfit-card-header flex justify-between items-center">
+            <h4>{{ outfit.name || '未命名穿搭' }}</h4>
+            <div class="outfit-card-actions">
+              <button class="action-btn" (click)="toggleFavorite(outfit)" [class.active]="outfit.isFavorite">
+                {{ outfit.isFavorite ? '❤️' : '🤍' }}
+              </button>
+              <button class="action-btn danger" (click)="deleteOutfit(outfit.id)">
+                🗑️
+              </button>
+            </div>
+          </div>
+          <div class="outfit-card-content">
+            <p class="outfit-count">包含 {{ outfit.clothIds?.length || 0 }} 件衣物</p>
+            <p class="outfit-desc" *ngIf="outfit.description">{{ outfit.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="activeTab === 'favorites'" class="favorites-section">
+      <div *ngIf="favoriteOutfits.length === 0" class="empty-state card">
+        <span class="empty-icon">❤️</span>
+        <h3>还没有收藏的穿搭</h3>
+        <p>在已保存的穿搭中点击爱心收藏</p>
+      </div>
+
+      <div *ngIf="favoriteOutfits.length > 0" class="outfit-grid">
+        <div class="outfit-card card" *ngFor="let outfit of favoriteOutfits">
+          <div class="outfit-card-header flex justify-between items-center">
+            <h4>{{ outfit.name || '未命名穿搭' }}</h4>
+            <div class="outfit-card-actions">
+              <button class="action-btn active" (click)="toggleFavorite(outfit)">
+                ❤️
+              </button>
+              <button class="action-btn danger" (click)="deleteOutfit(outfit.id)">
+                🗑️
+              </button>
+            </div>
+          </div>
+          <div class="outfit-card-content">
+            <p class="outfit-count">包含 {{ outfit.clothIds?.length || 0 }} 件衣物</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,54 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <span class="auth-logo">👗</span>
+      <h1>ClothSet</h1>
+      <p class="auth-subtitle">您的智能电子衣橱管理系统</p>
+    </div>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="form-group">
+        <label for="username">用户名</label>
+        <input
+          type="text"
+          id="username"
+          formControlName="username"
+          class="form-control"
+          placeholder="请输入用户名"
+          [class.error]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+        >
+        <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="error-message">
+          请输入用户名
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">密码</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+          placeholder="请输入密码"
+          [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+        >
+        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+          请输入密码
+        </div>
+      </div>
+      
+      <div *ngIf="errorMessage" class="error-alert">
+        {{ errorMessage }}
+      </div>
+      
+      <button type="submit" class="btn btn-primary btn-full" [disabled]="isLoading">
+        <span *ngIf="!isLoading">登录</span>
+        <span *ngIf="isLoading">登录中...</span>
+      </button>
+    </form>
+    
+    <div class="auth-footer">
+      <p>还没有账号？<a routerLink="/register" class="link-primary">立即注册</a></p>
+    </div>
+  </div>
+</div>
