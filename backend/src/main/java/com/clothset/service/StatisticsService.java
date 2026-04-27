@@ -116,8 +116,6 @@ public class StatisticsService {
         
         Long totalClothes = clothRepository.countByUserAndCategory(user, null);
         
-        List<CalendarEntryDTO> currentMonthEntries = new ArrayList<>();
-        
         Map<String, Object> result = new HashMap<>();
         result.put("totalClothes", totalClothes);
         result.put("month", today.getMonthValue());
